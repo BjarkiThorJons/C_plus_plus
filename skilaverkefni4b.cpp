@@ -31,6 +31,9 @@ public:
 		if (percentage > 105) {
 			cout << "To many bookings";
 		}
+		else if (id <0){
+			
+		}
 		else {
 			std::cout << "Flight " << id << " : " << reserved << "/" << capacity << " " << percentage << "% seats reserved" << endl;
 		}
@@ -89,17 +92,9 @@ public:
 			listi[next++] = stak;
 		}
 	}
-	int saekja() {
-		for (int i = 0; i < sizeof(listi); i++){
-			listi[i].Booking();
-		}
-		
-		return 0;
-	}
 	int id(int b){
-		for (int i = 0; i < sizeof(listi); i++)
+		for (int i = 0; i < next; i++)
 		{
-			//cout << endl << booking[i].returnId() <<" " << id << endl;
 			if (listi[i].returnId() == b) {
 				return i;
 			}
@@ -109,6 +104,15 @@ public:
 		for (int i = 0; i < next; i++)
 			listi[i].Booking();
 	}
+	void add(int b, int reserved){
+		listi[b].reserveSeats(reserved);
+	}
+	void cancel(int b, int reserved){
+		listi[b].cancelReservations(reserved);
+	}
+	void del(int b){
+		listi[b] = FlightBooking(-1, 0, 0);
+	}
 	~FlightList() {
 		delete[]listi;
 	}
@@ -116,23 +120,13 @@ public:
 
 
 int main() {
-	/*
-	int reserved,
-	capacity;
-	cout << "Provide flight capacity: ";
-	cin >> capacity;
-	cout << "Provide number of reserved seats: ";
-	cin >> reserved;
-	FlightBooking s = FlightBooking(1, capacity, reserved);
-	s.Booking();
-	*/
-	FlightBooking booking[10];
-	FlightList boooking = FlightList();
-	boooking.setja(FlightBooking(1, 200, 0));
-	boooking.setja(FlightBooking(2, 400, 0));
-	boooking.setja(FlightBooking(3, 600, 0));
-	boooking.setja(FlightBooking(4, 800, 0));
-	cout << "asd: " << boooking.saekja();
+	FlightList booking = FlightList();
+	booking.setja(FlightBooking(2, 200, 0));
+	booking.setja(FlightBooking(1, 400, 0));
+	booking.setja(FlightBooking(3, 600, 0));
+	booking.setja(FlightBooking(4, 800, 0));
+	int asd = booking.id(2);
+	booking.syna();
 	string command = "";
 	int n;
 	int id;
@@ -149,45 +143,20 @@ int main() {
 		ss << command;
 		cout << endl;
 		ss >> command >> id >> n;
-		/*
-		for (int i = 0; i < sizeof(booking); i++)
-		{
-			//cout << endl << booking[i].returnId() <<" " << id << endl;
-			if (booking[i].returnId() == id) {
-				s = i;
-				cout << s;
-			}
-		}
-		*/
+		int s = booking.id(id);
 		if (command == "add") {
-			booking[s].reserveSeats(n);
+			booking.add(s, n);
 		}
 		else if (command == "cancel") {
-			booking[s].cancelReservations(n);
+			booking.cancel(s, n);
 		}
 		else if (command == "create") {
-			int q = teljari;
-			for (int i = 0; i < 10; i++)
-			{
-				//cout << endl << booking[i].returnId() <<" " << id << endl;
-				if (booking[i].returnId() == -1) {
-					q = i;
-				}
-			}
-			booking[q] = FlightBooking(id, n, 0);
-			teljari += 1;
+			booking.setja(FlightBooking(id, n, 0));
 		}
-		else if (command == "delete") {
-			booking[s] = FlightBooking(-1, 0, 0);
-			teljari += 1;
+		else if (command == "delete"){
+			booking.del(s);
 		}
-		for (int i = 0; i < 10; i++)
-		{
-			if (booking[i].returnId() > 0) {
-				booking[i].Booking();
-			}
-		}
-		// handle the command
+		booking.syna();
 	}
 	cout << endl;
 	return 0;
