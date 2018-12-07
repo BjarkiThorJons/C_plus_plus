@@ -5,13 +5,13 @@
 #include <sstream>
 
 using namespace std;
-
+// Bý til upprunalega classan
 class Booking {
 protected:
-	int id;
 	int capacity;
 	int reserved;
 public:
+	int id;
 	int type;
 	Booking(int i, int cab, int res, int t)
 	{
@@ -27,6 +27,7 @@ public:
 		reserved = 0;
 		type = 0;
 	}
+	//Sýna allar uppýsingar fyrir ferðina
 	void virtual Syna_Booking()
 	{
 		if (reserved < 0) {
@@ -40,9 +41,10 @@ public:
 
 		}
 		else {
-			std::cout << "Flight " << id << " : " << reserved << "/" << capacity << " " << percentage << "% seats reserved" << endl;
+			std::cout << "Eitthvað " << id << " : " << reserved << "/" << capacity << " " << percentage << "% seats reserved" << endl;
 		}
 	}
+	//Bæta við bókunum
 	void reserveSeats(int number_ob_seats)
 	{
 		if (number_ob_seats < 0) {
@@ -55,6 +57,7 @@ public:
 			cout << "Cannot perform this operation" << endl;
 		}
 	}
+	//fjarlægja bókanir
 	void cancelReservations(int number_ob_seats)
 	{
 		if (number_ob_seats < 0) {
@@ -71,9 +74,10 @@ public:
 		return id;
 	}
 };
+//Bý til þrjá undir classa
 class FlightBooking : public Booking {
 public:
-	FlightBooking(int id, int capacity, int reserved, int type) : Booking(id, capacity, reserved, type){}
+	FlightBooking(int id, int capacity, int reserved, int type) : Booking(id, capacity, reserved, type) {}
 	void Syna_Booking()
 	{
 		if (reserved < 0) {
@@ -135,7 +139,7 @@ public:
 
 };
 
-
+//klassi fyrir dynamic array
 class FlightList {
 private:
 	Booking **listi;
@@ -161,6 +165,7 @@ public:
 			listi[next++] = new FlightBooking(stak);
 		}
 	}
+	//þrjú functions fyrir öðruvísi bókanir til að bæti við í listan
 	void setja_ship(ShipBooking stak) {
 		if (next <= staerd - 1)
 			listi[next++] = new ShipBooking(stak);
@@ -189,32 +194,42 @@ public:
 			listi[next++] = new BusBooking(stak);
 		}
 	}
-
-	int id(int b) {
+	//finna bókun í listanum með id og type
+	int id(int b , int t) {
 		for (int i = 0; i < next; i++)
 		{
-			if (listi[i]->returnId() == b) {
+			if (listi[i]->id == b && listi[i]->type == t) {
 				return i;
 			}
 		}
 	}
+	//þrjú functions fyrir örðuvísi bókanir til að sýna upplýsingar
+	void syna_flug() {
+		for (int i = 0; i < next; i++) {
+			if (listi[i]->type == 1) {
+				listi[i]->Syna_Booking();
+			}
+		}
+	}
+	void syna_skip() {
+		for (int i = 0; i < next; i++) {
+			if (listi[i]->type == 2) {
+				listi[i]->Syna_Booking();
+			}
+		}
+	}
+	void syna_rutu(){
+		for (int i = 0; i < next; i++) {
+			if (listi[i]->type == 3) {
+				listi[i]->Syna_Booking();
+			}
+		}
+	}
 	void syna() {
-		for (int i = 0; i < next; i++){
-			if (listi[i]->type == 1){
-				listi[i]->Syna_Booking();
-			}
-		}
-		for (int i = 0; i < next; i++){
-			if (listi[i]->type == 2){
-				listi[i]->Syna_Booking();
-			}
-		}
-		for (int i = 0; i < next; i++){
-			if (listi[i]->type == 3){
-				listi[i]->Syna_Booking();
-			}
-		}
-			
+		syna_flug();
+		syna_skip();
+		syna_rutu();
+
 	}
 	void add(int b, int reserved) {
 		listi[b]->reserveSeats(reserved);
@@ -223,7 +238,7 @@ public:
 		listi[b]->cancelReservations(reserved);
 	}
 	void del(int b) {
-		//listi[b]->id = -1;
+		listi[b]->id = -1;
 	}
 	~FlightList() {
 		delete[]listi;
@@ -236,7 +251,6 @@ int main() {
 	booking.setja_ship(ShipBooking(1, 400, 0, 2));
 	booking.setja_flight(FlightBooking(3, 600, 0, 1));
 	booking.setja_bus(BusBooking(4, 800, 0, 3));
-	int asd = booking.id(2);
 	booking.syna();
 	string command = "";
 	string type = "";
@@ -244,9 +258,10 @@ int main() {
 	int id;
 	int teljari = 0;
 	int s = 0;
+	int t = 0;
 	while (command != "quit")
 	{
-
+		//commands til að bæta og breyta bókunum
 		cout << "What would you like to do?: ";
 
 		getline(cin, command);
@@ -255,7 +270,17 @@ int main() {
 		ss << command;
 		cout << endl;
 		ss >> command >> type >> id >> n;
-		int s = booking.id(id);
+		if (type == "flight") {
+			t = 1;
+		}
+		else if (type == "ship") {
+			t = 2;
+		}
+		else if (type == "bus") {
+			t = 3;
+			cout << t;
+		}
+		int s = booking.id(id,t);
 		if (command == "add") {
 			booking.add(s, n);
 		}
