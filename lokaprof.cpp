@@ -20,10 +20,9 @@ int tryggjaOddatolu(int i){
 }
 
 class Leikmadur{
-protected:
+public:
 	int id;
 	string nafn;
-public:
 	Leikmadur(){
 		id = 0;
 		nafn = "";
@@ -70,12 +69,6 @@ public:
 			return false;
 		}
 	}
-	
-
-	VistarLeikmadur operator<<(VistarLeikmadur b){
-		cout << "hæ";
-	}
-
 };
 ostream & operator << (ostream &out, const VistarLeikmadur &c)
 {
