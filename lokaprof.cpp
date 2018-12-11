@@ -1,5 +1,6 @@
 // lokaprof.cpp : Defines the entry point for the console application.
-//
+//Bjarki Þór Jónsson 
+//11.12.2018
 
 #include "stdafx.h"
 #include <iostream>
@@ -19,9 +20,10 @@ int tryggjaOddatolu(int i){
 }
 
 class Leikmadur{
-public:
+protected:
 	int id;
 	string nafn;
+public:
 	Leikmadur(){
 		id = 0;
 		nafn = "";
@@ -30,17 +32,19 @@ public:
 		id = i;
 		nafn = n;
 	}
+	string Nafn(){
+		return nafn;
+	}
 };
 
 class Stada{
 public:
-	string stada;
+	char stada;
 	string nafn;
 	Stada(){
-		stada = "";
 		nafn = "";
 	}
-	Stada(string i, string n){
+	Stada(char i, string n){
 		stada = i;
 		nafn = n;
 	}
@@ -49,11 +53,11 @@ public:
 class VistarLeikmadur : public Leikmadur{
 public: 
 	int stig;
+	Stada stad;
 	friend ostream & operator << (ostream &out, const VistarLeikmadur &c);
-	//Stada stad;
-	VistarLeikmadur(int id, string nafn ,int s) : Leikmadur(id, nafn){
+	VistarLeikmadur(int id, string nafn ,int s , Stada sa) : Leikmadur(id, nafn){
 		stig = s;
-		//stad = sa;
+		stad = sa;
 	}
 	void Stig(int i){
 		stig = i;
@@ -69,13 +73,13 @@ public:
 	
 
 	VistarLeikmadur operator<<(VistarLeikmadur b){
-		cout << "h�";
+		cout << "hæ";
 	}
 
 };
 ostream & operator << (ostream &out, const VistarLeikmadur &c)
 {
-	out << "id: "<<c.id<<" Nafn: "<<c.nafn<<" Stada: eh "<<" Stig "<<c.stig;
+	out << "id: "<<c.id<<", Nafn: "<<c.nafn<<", Stada: "<<c.stad.nafn<<", Stig "<<c.stig;
 	return out;
 }
 int main()
@@ -85,17 +89,17 @@ int main()
 	tryggjaOddatolu(i);
 	}
 	*/
-	//Stada austur('A',"Austur");
-	//Stada vestur('V', "Vestur");
+	Stada austur('A',"Austur");
+	Stada vestur('V', "Vestur");
 
-	VistarLeikmadur geir(101, "Geir", 0);
-	VistarLeikmadur gauti(102, "Gauti", 0);
+	VistarLeikmadur geir(101, "Geir", 0, austur);
+	VistarLeikmadur gauti(102, "Gauti", 0, vestur);
 	geir.Stig(10);
 	gauti.Stig(3);
 	cout << geir << endl;
 	cout << gauti << endl;
-	if (geir < gauti) cout << gauti.nafn << " vann!\n";
-	else cout << geir.nafn << " vann!\n";
+	if (geir < gauti) cout << gauti.Nafn() << " vann!\n";
+	else cout << geir.Nafn() << " vann!\n";
 	return 0;
 }
 
